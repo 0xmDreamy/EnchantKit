@@ -1,0 +1,21 @@
+{
+  "name": "cauldronator",
+  "description": "",
+  "scripts": {
+    "build": "tsc --incremental",
+    "test": "vitest run",
+    "test:dev": "vitest dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "@viem/anvil": "^0.0.6",
+    "vite": "^4.4.8",
+    "vitest": "^0.34.1",
+    "@types/lodash": "^4.14.196"
+  },
+  "dependencies": {
+    "cooker": "workspace:*",
+    "lodash": "^4.17.21",
+    "viem": "1.5.3"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "enchant-kit",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": "0xmDreamy <0xmDreamy@proton.me>",
+  "license": "MIT",
+  "scripts": {
+    "test": "pnpm -r test"
+  },
+  "devDependencies": {
+    "rome": "12.1.3"
+  }
+}
