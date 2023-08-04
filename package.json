@@ -13,9 +13,11 @@
     "lint": "rome check .",
     "lint:fix": "pnpm lint --apply-unsafe",
     "check": "pnpm format && pnpm lint",
-    "check:ci": "rome ci ."
+    "check:ci": "rome ci .",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "husky": "^8.0.3",
     "rome": "12.1.3"
   }
 }
