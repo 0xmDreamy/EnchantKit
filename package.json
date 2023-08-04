@@ -6,7 +6,14 @@
   "author": "0xmDreamy <0xmDreamy@proton.me>",
   "license": "MIT",
   "scripts": {
-    "test": "pnpm -r test"
+    "test:ci": "pnpm -r test",
+    "test": "pnpm -r test:ci",
+    "format": "rome format .",
+    "format:fix": "pnpm format --write",
+    "lint": "rome check .",
+    "lint:fix": "pnpm lint --apply-unsafe",
+    "check": "pnpm format && pnpm lint",
+    "check:ci": "rome ci ."
   },
   "devDependencies": {
     "rome": "12.1.3"

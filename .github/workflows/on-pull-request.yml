@@ -1,0 +1,10 @@
+jobs:
+  verify:
+    name: Verify
+    secrets: inherit
+    uses: ./.github/workflows/verify.yml
+
+name: Pull request
+
+on:
+  - pull_request

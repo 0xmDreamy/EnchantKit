@@ -1,0 +1,25 @@
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Check
+        run: pnpm check
+
+      - env:
+          RPC_URL: ${{ secrets.RPC_URL }}
+        name: Run tests
+        run: pnpm test
+
+name: Verify
+
+on:
+  workflow_call:
+  workflow_dispatch:

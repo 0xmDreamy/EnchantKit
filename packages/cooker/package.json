@@ -4,6 +4,7 @@
   "scripts": {
     "build": "tsc --incremental",
     "test": "vitest run",
+    "test:ci": "CI=true vitest",
     "test:dev": "vitest dev"
   },
   "devDependencies": {

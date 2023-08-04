@@ -14,9 +14,6 @@ importers:
 
   packages/cauldronator:
     dependencies:
-      '@types/lodash':
-        specifier: ^4.14.196
-        version: 4.14.196
       cooker:
         specifier: workspace:*
         version: link:../cooker
@@ -27,6 +24,9 @@ importers:
         specifier: 1.5.3
         version: 1.5.3(typescript@5.1.6)
     devDependencies:
+      '@types/lodash':
+        specifier: ^4.14.196
+        version: 4.14.196
       '@viem/anvil':
         specifier: ^0.0.6
         version: 0.0.6
@@ -370,7 +370,7 @@ packages:
 
   /@types/lodash@4.14.196:
     resolution: {integrity: sha512-22y3o88f4a94mKljsZcanlNWPzO0uBsBdzLAngf2tp533LzZcQzb6+eZPJ+vCTt+bqF2XnvT9gejTLsAcJAJyQ==}
-    dev: false
+    dev: true
 
   /@types/node@20.4.7:
     resolution: {integrity: sha512-bUBrPjEry2QUTsnuEjzjbS7voGWCc30W0qzgMf90GPeDGFRakvrz47ju+oqDAKCXLUCe39u57/ORMl/O/04/9g==}
