@@ -160,6 +160,7 @@ export const BENTOBOX_WITHDRAW_ACTION = {
 	kind: "ACTION_BENTO_WITHDRAW",
 	index: 21,
 	cauldron: "V1",
+	value: 0n,
 } as const satisfies ActionDescription<typeof BENTOBOX_WITHDRAW_PARAMETERS_ABI>;
 
 export const BENTOBOX_TRANSFER_PARAMETERS_ABI = [

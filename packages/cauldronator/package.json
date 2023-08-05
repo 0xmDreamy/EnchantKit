@@ -9,15 +9,16 @@
     "test:dev": "pnpm with-env vitest dev"
   },
   "devDependencies": {
-    "typescript": "^5.1.6",
+    "@types/lodash": "^4.14.196",
     "@viem/anvil": "^0.0.6",
+    "typescript": "^5.1.6",
     "vite": "^4.4.8",
-    "vitest": "^0.34.1",
-    "@types/lodash": "^4.14.196"
+    "vitest": "^0.34.1"
   },
   "dependencies": {
     "cooker": "workspace:*",
     "lodash": "^4.17.21",
+    "type-fest": "^4.1.0",
     "viem": "1.5.3"
   }
 }

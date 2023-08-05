@@ -4,12 +4,18 @@ import {
 	Action,
 	BENTOBOX_DEPOSIT_ACTION,
 	BENTOBOX_SET_APPROVAL_ACTION,
+	BENTOBOX_WITHDRAW_ACTION,
 	BORROW_ACTION,
+	GET_REPAY_PART_ACTION,
+	REMOVE_COLLATERAL_ACTION,
+	REPAY_ACTION,
 	USE_ETHEREUM,
+	USE_VALUE_1,
 	USE_VALUE_2,
 	createAction,
 } from "cooker";
 import _ from "lodash";
+import { RequireAtLeastOne } from "type-fest";
 import { Address, Hex, encodeFunctionData } from "viem";
 
 export type CauldronVersion = "V1" | "V2" | "V3" | "V4";
@@ -59,38 +65,42 @@ export type MasterContractApprovalParameters = {
 	s: Hex;
 };
 
-export type AddCollateralParameters = {
-	token: Address | "ETH";
-	amount: bigint;
-};
-
-export type AddCollateralAndBorrowParameters = {
-	from: Address;
-	masterContractApproval?: MasterContractApprovalParameters;
-	collateral?: AddCollateralParameters;
-	borrow?: {
-		amount: bigint;
-		to?: Address;
-	};
-};
+export type AddCollateralAndBorrowParameters = RequireAtLeastOne<
+	{
+		from: Address;
+		masterContractApproval?: MasterContractApprovalParameters;
+		add?: {
+			token: Address | "ETH";
+			amount: bigint;
+		};
+		borrow?: {
+			amount: bigint;
+			to?: Address;
+		};
+	},
+	"masterContractApproval" | "add" | "borrow"
+>;
 
 export function addCollateralAndBorrow({
 	from,
 	masterContractApproval,
-	collateral,
+	add,
 	borrow,
-}: AddCollateralAndBorrowParameters): Hex | null {
+}: AddCollateralAndBorrowParameters): Hex {
 	const actions: Action[] = [];
 	if (masterContractApproval !== undefined) {
 		const { user, masterContract, approved, v, r, s } = masterContractApproval;
+
 		const action = createAction({
 			...BENTOBOX_SET_APPROVAL_ACTION,
 			parameters: [user, masterContract, approved, v, r, s],
 		});
 		actions.push(action);
 	}
-	if (collateral !== undefined) {
-		const { token, amount } = collateral;
+
+	if (add !== undefined) {
+		const { token, amount } = add;
+
 		let depositAction;
 		if (token === "ETH") {
 			depositAction = createAction({
@@ -118,6 +128,7 @@ export function addCollateralAndBorrow({
 
 	if (borrow !== undefined) {
 		const { amount, to } = borrow;
+
 		if (actions.length === 0) {
 			return encodeFunctionData({
 				abi: CAULDRON_V3_ABI,
@@ -133,16 +144,99 @@ export function addCollateralAndBorrow({
 			actions.push(action);
 		}
 	}
+	return encodeFunctionData({
+		abi: CAULDRON_V3_ABI,
+		functionName: "cook",
+		args: _.unzip(actions) as [number[], bigint[], Hex[]],
+	});
+}
 
-	if (actions.length > 0) {
-		return encodeFunctionData({
-			abi: CAULDRON_V3_ABI,
-			functionName: "cook",
-			args: _.unzip(actions) as [number[], bigint[], Hex[]],
+export type RepayAndRemoveCollateralParameters = RequireAtLeastOne<
+	{
+		from: Address;
+		masterContractApproval?: MasterContractApprovalParameters;
+		repay?: {
+			token: Address;
+			amount: bigint;
+			to?: Address;
+		};
+		remove?: {
+			token: Address | "ETH";
+			amount: bigint;
+			to?: Address;
+		};
+	},
+	"masterContractApproval" | "repay" | "remove"
+>;
+
+export function repayAndRemoveCollateral({
+	from,
+	masterContractApproval,
+	repay,
+	remove,
+}: RepayAndRemoveCollateralParameters): Hex {
+	const actions: Action[] = [];
+	if (masterContractApproval !== undefined) {
+		const { user, masterContract, approved, v, r, s } = masterContractApproval;
+
+		const action = createAction({
+			...BENTOBOX_SET_APPROVAL_ACTION,
+			parameters: [user, masterContract, approved, v, r, s],
 		});
-	} else {
-		return null;
+		actions.push(action);
 	}
+
+	if (repay !== undefined) {
+		const { token, amount, to } = repay;
+
+		const depositAction = createAction({
+			...BENTOBOX_DEPOSIT_ACTION,
+			value: 0n,
+			parameters: [token, from, amount, 0n],
+		});
+		actions.push(depositAction);
+
+		const getRepayPartAction = createAction({
+			...GET_REPAY_PART_ACTION,
+			parameters: [amount],
+		});
+		actions.push(getRepayPartAction);
+
+		const repayAction = createAction({
+			...REPAY_ACTION,
+			value: 0n,
+			parameters: [USE_VALUE_1, to ?? from, false],
+		});
+
+		actions.push(repayAction);
+	}
+
+	if (remove !== undefined) {
+		const { amount, token, to } = remove;
+
+		const removeCollateralAction = createAction({
+			...REMOVE_COLLATERAL_ACTION,
+			parameters: [amount, from],
+		});
+		actions.push(removeCollateralAction);
+
+		const withdrawAction = createAction({
+			...BENTOBOX_WITHDRAW_ACTION,
+			parameters: [
+				token === "ETH" ? USE_ETHEREUM : token,
+				to ?? from,
+				amount,
+				0n,
+			],
+		});
+		actions.push(withdrawAction);
+	}
+
+	return encodeFunctionData({
+		abi: CAULDRON_V3_ABI,
+		functionName: "cook",
+		args: _.unzip(actions) as [number[], bigint[], Hex[]],
+	});
 }
 
 // export type AddCollateralAndLeverageParameters = {
