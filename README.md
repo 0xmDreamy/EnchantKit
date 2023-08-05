@@ -21,4 +21,4 @@ Feel free to contribute to the SDK by opening a PR or submitting issues.
 
 ### Test
 
-To test the all packages run `pnpm test` in the root directory. It is also possible to run `pnpm test` in the various packages to test them individually. During development it might be useful run tests in watch mode with `pnpm test:dev` in the directory of the particular package.
+To test the all packages run `pnpm test` in the root directory. It is also possible to run `pnpm test` in the various packages to test them individually. It is possible to run the tests in watch mode by running `pnpm test:dev` in the directory of the particular package.
