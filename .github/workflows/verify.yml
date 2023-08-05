@@ -1,4 +1,32 @@
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Build packages
+        run: pnpm build
+
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Check
+        run: pnpm check:ci
+
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -10,13 +38,10 @@ jobs:
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
 
-      - name: Check
-        run: pnpm check
-
       - env:
-          RPC_URL: ${{ secrets.RPC_URL }}
+          MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
         name: Run tests
-        run: pnpm test
+        run: pnpm test:ci
 
 name: Verify
 

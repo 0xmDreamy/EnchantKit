@@ -8,6 +8,9 @@
   "scripts": {
     "test:ci": "pnpm -r test",
     "test": "pnpm -r test:ci",
+    "test": "pnpm with-env pnpm -r test",
+    "test:ci": "pnpm -r test:ci",
+    "build": "pnpm -r build",
     "format": "rome format .",
     "format:fix": "pnpm format --write",
     "lint": "rome check .",
@@ -15,6 +18,7 @@
     "check": "pnpm format && pnpm lint",
     "check:ci": "rome ci .",
     "prepare": "husky install"
+    "check:ci": "rome ci ."
   },
   "devDependencies": {
     "husky": "^8.0.3",
