@@ -2,10 +2,11 @@
   "name": "cauldronator",
   "description": "",
   "scripts": {
+    "with-env": "dotenv -e ../../.env --",
     "build": "tsc --incremental",
-    "test": "vitest run",
+    "test": "pnpm with-env vitest run",
     "test:ci": "CI=true vitest",
-    "test:dev": "vitest dev"
+    "test:dev": "pnpm with-env vitest dev"
   },
   "devDependencies": {
     "typescript": "^5.1.6",

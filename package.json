@@ -6,8 +6,8 @@
   "author": "0xmDreamy <0xmDreamy@proton.me>",
   "license": "MIT",
   "scripts": {
-    "test:ci": "pnpm -r test",
-    "test": "pnpm -r test:ci",
+    "prepare": "husky install",
+    "with-env": "dotenv -e ./.env --",
     "test": "pnpm with-env pnpm -r test",
     "test:ci": "pnpm -r test:ci",
     "build": "pnpm -r build",
@@ -16,11 +16,10 @@
     "lint": "rome check .",
     "lint:fix": "pnpm lint --apply-unsafe",
     "check": "pnpm format && pnpm lint",
-    "check:ci": "rome ci .",
-    "prepare": "husky install"
     "check:ci": "rome ci ."
   },
   "devDependencies": {
+    "dotenv-cli": "^7.2.1",
     "husky": "^8.0.3",
     "rome": "12.1.3"
   }
