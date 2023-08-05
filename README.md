@@ -10,14 +10,14 @@ Feel free to contribute to the SDK by opening a PR or submitting issues.
 
 ### Prerequisites
 
-- [PNPM](https://pnpm.io/installation)
+- [pnpm](https://pnpm.io/installation)
 - [Foundry](https://getfoundry.sh)
 
 ### Setup
 
 1. `pnpm i`
 2. `cp .env.example .env`
-3. Update `.env` with appropriate values
+3. Update the `.env` file with appropriate values
 
 ### Test
 
