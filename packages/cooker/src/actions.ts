@@ -18,17 +18,10 @@ export const USE_VALUE_2 = -2n;
 export type CreateActionParameters<TParams extends readonly AbiParameter[]> =
 	ActionDescription<TParams> & {
 		value: bigint;
-		parameters?: TParams extends readonly AbiParameter[]
+		parameters: TParams extends readonly AbiParameter[]
 			? AbiParametersToPrimitiveTypes<TParams>
 			: never;
-		//   ? undefined
-		//   : AbiParametersToPrimitiveTypes<TParams>;
-	}; /*) & (TParams extends readonly []
-      ? { parameters: undefined }
-      : {
-          parameters: AbiParametersToPrimitiveTypes<TParams>;
-        });
-*/
+	};
 
 export type Action = [number, bigint, Hex];
 
