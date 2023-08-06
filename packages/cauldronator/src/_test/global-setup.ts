@@ -1,10 +1,13 @@
-import { forkBlockNumber, rpcUrl } from "./constants";
+import { forkBlockNumber, rpcUrl, runIntegrationTests } from "./constants";
 import { startProxy } from "@viem/anvil";
 
-export default () =>
-	startProxy({
-		options: {
-			forkUrl: rpcUrl,
-			forkBlockNumber,
-		},
-	});
+export default () => {
+	if (runIntegrationTests) {
+		startProxy({
+			options: {
+				forkUrl: rpcUrl,
+				forkBlockNumber,
+			},
+		});
+	}
+};

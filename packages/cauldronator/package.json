@@ -6,7 +6,8 @@
     "build": "tsc --incremental",
     "test": "pnpm with-env vitest run",
     "test:ci": "CI=true vitest",
-    "test:dev": "pnpm with-env vitest dev"
+    "test:dev": "pnpm with-env vitest dev",
+    "test:dev:no-integration": "INTEGRATION_TESTS=false pnpm with-env vitest dev"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.196",

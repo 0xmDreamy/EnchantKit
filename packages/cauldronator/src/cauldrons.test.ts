@@ -1,5 +1,6 @@
 import { publicClient, testClient } from "./_test/clients";
 import { addCollateralAndBorrow, repayAndRemoveCollateral } from "./cauldrons";
+import { runIntegrationTests } from "./_test/constants";
 import { isNull } from "lodash";
 import { describe, expect, test } from "vitest";
 
@@ -17,7 +18,7 @@ describe("addCollateralAndBorrow", () => {
 		);
 	});
 
-	describe("integration", () => {
+	describe.skipIf(!runIntegrationTests)("integration", () => {
 		test("should be able to borrow", async () => {
 			const blockNumber = 17164936n;
 			await testClient.reset({ blockNumber });
@@ -62,7 +63,7 @@ describe("addCollateralAndBorrow", () => {
 });
 
 describe("repayAndRemoveCollateral", () => {
-	describe("integration", () => {
+	describe.skipIf(!runIntegrationTests)("integration", () => {
 		test("should repay and remove collateral", async () => {
 			const blockNumber = 17836605n;
 			await testClient.reset({ blockNumber });

@@ -1,14 +1,21 @@
 import { testClient } from "./clients";
-import { forkBlockNumber, poolId, rpcUrl } from "./constants";
+import {
+	forkBlockNumber,
+	poolId,
+	rpcUrl,
+	runIntegrationTests,
+} from "./constants";
 import { fetchLogs } from "@viem/anvil";
 import { afterAll, afterEach, vi } from "vitest";
 
 afterAll(async () => {
-	vi.restoreAllMocks();
-	await testClient.reset({
-		jsonRpcUrl: rpcUrl,
-		blockNumber: forkBlockNumber,
-	});
+	if (runIntegrationTests) {
+		vi.restoreAllMocks();
+		await testClient.reset({
+			jsonRpcUrl: rpcUrl,
+			blockNumber: forkBlockNumber,
+		});
+	}
 });
 
 afterEach((context) => {
