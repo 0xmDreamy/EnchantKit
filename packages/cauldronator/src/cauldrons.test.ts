@@ -1,6 +1,10 @@
 import { publicClient, testClient } from "./_test/clients";
-import { addCollateralAndBorrow, repayAndRemoveCollateral } from "./cauldrons";
 import { runIntegrationTests } from "./_test/constants";
+import {
+	addCollateralAndBorrow,
+	addCollateralAndLeverage,
+	repayAndRemoveCollateral,
+} from "./cauldrons";
 import { isNull } from "lodash";
 import { describe, expect, test } from "vitest";
 
@@ -89,6 +93,56 @@ describe("repayAndRemoveCollateral", () => {
 				from: userAddress,
 				to: cauldronAddress,
 				data,
+			});
+			const { status } = await publicClient.waitForTransactionReceipt({
+				hash: transactionHash,
+			});
+			expect(status).toBe("success");
+		});
+	});
+});
+
+describe("addCollateralAndLeverage", () => {
+	describe.skipIf(!runIntegrationTests)("integration", () => {
+		test("should repay and remove collateral", async () => {
+			const blockNumber = 13915559n;
+			await testClient.reset({ blockNumber });
+			await testClient.setNextBlockBaseFeePerGas({ baseFeePerGas: 0n });
+
+			const cauldronAddress = "0xD8427794f8e9Af9bC0E027Eb9d4d3ee63b2491B3";
+			const cauldronMasterContract =
+				"0x476b1E35DDE474cB9Aa1f6B85c9Cc589BFa85c1F";
+			const userAddress = "0xa6c5ea5b317875640990DaAa9cEeb60A6A0cbEc8";
+			const swapperAddress = "0x205d52E9eA8E42659AC5C7F83863B18d27d7E0F5";
+			const collateralAmount = 4n * 10n ** 15n;
+			const data = addCollateralAndLeverage({
+				from: userAddress,
+				masterContractApproval: {
+					user: userAddress,
+					masterContract: cauldronMasterContract,
+					approved: true,
+					v: 27,
+					r: "0x5681365058d7f724916f55d43c0a7c99d8362b49463eec0aa79ffa447203b920",
+					s: "0x6d8b85284c705be22e034fa5f6e883d60d98326dafd1fd47f2b009eb1cdd114c",
+				},
+				add: {
+					token: "ETH",
+					amount: collateralAmount,
+				},
+				leverage: {
+					kind: "ISwapper",
+					amount: 10n * 10n ** 18n,
+					swapper: swapperAddress,
+					minToShare: 25n * 10n ** 14n,
+				},
+			});
+			const transactionHash = await testClient.sendUnsignedTransaction({
+				from: userAddress,
+				to: cauldronAddress,
+				data,
+				value: collateralAmount,
+				maxFeePerGas: 0n,
+				maxPriorityFeePerGas: 0n,
 			});
 			const { status } = await publicClient.waitForTransactionReceipt({
 				hash: transactionHash,
