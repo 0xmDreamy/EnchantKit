@@ -5,7 +5,7 @@ import {
 	addCollateralAndLeverage,
 	repayAndRemoveCollateral,
 } from "./cauldrons";
-import { isNull } from "lodash";
+import { parseEther } from "viem";
 import { describe, expect, test } from "vitest";
 
 describe("addCollateralAndBorrow", () => {
@@ -46,10 +46,10 @@ describe("addCollateralAndBorrow", () => {
 				},
 				add: {
 					token: collateralTokenAddress,
-					amount: 500_000n * 10n ** 18n,
+					amount: parseEther(`${500_000}`), // 500_000n * 10n ** 18n,
 				},
 				borrow: {
-					amount: 150_000n * 10n ** 18n,
+					amount: parseEther(`${150_000}`),
 				},
 			});
 
@@ -80,12 +80,12 @@ describe("repayAndRemoveCollateral", () => {
 			const data = repayAndRemoveCollateral({
 				from: userAddress,
 				repay: {
-					amount: 2_000_000n * 10n ** 18n,
+					amount: parseEther(`${2_000_000}`),
 					token: mimAddress,
 				},
 				remove: {
 					token: collateralTokenAddress,
-					amount: 8_000_000n * 10n ** 18n,
+					amount: parseEther(`${8_000_000}`),
 				},
 			});
 
@@ -104,7 +104,7 @@ describe("repayAndRemoveCollateral", () => {
 
 describe("addCollateralAndLeverage", () => {
 	describe.skipIf(!runIntegrationTests)("integration", () => {
-		test("should repay and remove collateral", async () => {
+		test("should add collateral and leverage", async () => {
 			const blockNumber = 13915559n;
 			await testClient.reset({ blockNumber });
 			await testClient.setNextBlockBaseFeePerGas({ baseFeePerGas: 0n });
@@ -114,7 +114,7 @@ describe("addCollateralAndLeverage", () => {
 				"0x476b1E35DDE474cB9Aa1f6B85c9Cc589BFa85c1F";
 			const userAddress = "0xa6c5ea5b317875640990DaAa9cEeb60A6A0cbEc8";
 			const swapperAddress = "0x205d52E9eA8E42659AC5C7F83863B18d27d7E0F5";
-			const collateralAmount = 4n * 10n ** 15n;
+			const collateralAmount = parseEther(`${0.004}`);
 			const data = addCollateralAndLeverage({
 				from: userAddress,
 				masterContractApproval: {
@@ -131,9 +131,9 @@ describe("addCollateralAndLeverage", () => {
 				},
 				leverage: {
 					kind: "ISwapper",
-					amount: 10n * 10n ** 18n,
+					amount: parseEther(`${10}`),
 					swapper: swapperAddress,
-					minToShare: 25n * 10n ** 14n,
+					minToShare: parseEther(`${0.0025}`),
 				},
 			});
 			const transactionHash = await testClient.sendUnsignedTransaction({
